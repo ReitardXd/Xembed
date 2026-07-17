@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <link rel="icon" type="image/png" href="favicon.png" />
+  <style>
+    body { font-family: sans-serif; width: 220px; padding: 10px; background: #313338; color: white; }
+    div { margin-bottom: 15px; }
+    label { display: flex; align-items: center; gap: 8px; cursor: pointer; }
+    select { width: 100%; padding: 5px; margin-top: 5px; background: #1e1f22; color: white; border: 1px solid #555; border-radius: 4px; }
+  </style>
+</head>
+<body>
+  <div>
+    <label>
+      <input type="checkbox" id="toggle-switch" checked />
+      Enable Auto-Embed
+    </label>
+  </div>
+  <div>
+    <label for="domain-select">Embed Type:</label>
+    <select id="domain-select">
+      <option value="vxtwitter.com">vxtwitter</option>
+      <option value="fixupx.com">fixupx</option>
+      <option value="girlcockx.com">girlcockx</option>
+      <option value="fxtwitter.com">fxtwitter</option>
+    </select>
+  </div>
+  <script src="dist/popup.js"></script>
+</body>
+</html>
