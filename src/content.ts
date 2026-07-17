@@ -1,8 +1,8 @@
 (function (): void {
   const LOG_PFX = '[Xembed]';
   const STORAGE_KEYS = { ENABLED: 'enabled', DOMAIN: 'domain' } as const;
-  const TWITTER_LINK_RE = /https?:\/\/(?:www\.)?(?:twitter|x)\.com\/[a-zA-Z0-9_]+\/status\/\d+/gi;
-  const DOMAIN_REPLACE_RE = /https?:\/\/(?:www\.)?(?:twitter|x)\.com/gi;
+  const TWITTER_LINK_RE = /https?:\/\/(?:www\.)?(?:twitter|x|vxtwitter|fxtwitter|fixupx|girlcockx)\.com\/[a-zA-Z0-9_]+\/status\/\d+/gi;
+  const DOMAIN_REPLACE_RE = /https?:\/\/(?:www\.)?(?:twitter|x|vxtwitter|fxtwitter|fixupx|girlcockx)\.com/gi;
   const ALLOWED_DOMAINS = new Set([
     'vxtwitter.com',
     'fixupx.com',
@@ -71,6 +71,17 @@
     }
   }
 
+  function onMessage(
+    message: { type: string; enabled?: boolean; domain?: string },
+  ): void {
+    if (message.type === 'UPDATE_ENABLED' && message.enabled !== undefined) {
+      extensionEnabled = message.enabled;
+    }
+    if (message.type === 'UPDATE_DOMAIN' && message.domain !== undefined) {
+      embedDomain = message.domain;
+    }
+  }
+
   function onPasteCapture(e: ClipboardEvent): void {
     if (!ready || !extensionEnabled) return;
 
@@ -121,10 +132,12 @@
   function mount(): void {
     document.addEventListener('paste', onPasteCapture, true);
     chrome.storage.onChanged.addListener(onStorageChanged);
+    chrome.runtime.onMessage.addListener(onMessage);
 
     destroy = (): void => {
       document.removeEventListener('paste', onPasteCapture, true);
       chrome.storage.onChanged.removeListener(onStorageChanged);
+      chrome.runtime.onMessage.removeListener(onMessage);
       destroy = null;
     };
   }

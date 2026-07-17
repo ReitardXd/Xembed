@@ -9,6 +9,14 @@
     return;
   }
 
+  function syncToContentScript(payload: Record<string, unknown>): void {
+    chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+      if (tabs[0]?.id) {
+        chrome.tabs.sendMessage(tabs[0].id, payload).catch(() => {});
+      }
+    });
+  }
+
   chrome.storage.local.get(['enabled', 'domain'], (result: { [key: string]: unknown }) => {
     if (chrome.runtime.lastError) {
       console.error(`${ERR_PFX} E110: storage.get failed`, chrome.runtime.lastError.message);
@@ -23,7 +31,8 @@
   });
 
   toggleEl.addEventListener('change', () => {
-    chrome.storage.local.set({ enabled: toggleEl.checked }, () => {
+    const isEnabled = toggleEl.checked;
+    chrome.storage.local.set({ enabled: isEnabled }, () => {
       if (chrome.runtime.lastError) {
         console.error(
           `${ERR_PFX} E120: storage.set('enabled') failed`,
@@ -31,10 +40,12 @@
         );
       }
     });
+    syncToContentScript({ type: 'UPDATE_ENABLED', enabled: isEnabled });
   });
 
   domainEl.addEventListener('change', () => {
-    chrome.storage.local.set({ domain: domainEl.value }, () => {
+    const newDomain = domainEl.value;
+    chrome.storage.local.set({ domain: newDomain }, () => {
       if (chrome.runtime.lastError) {
         console.error(
           `${ERR_PFX} E130: storage.set('domain') failed`,
@@ -42,5 +53,6 @@
         );
       }
     });
+    syncToContentScript({ type: 'UPDATE_DOMAIN', domain: newDomain });
   });
 })();
