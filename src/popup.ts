@@ -3,8 +3,9 @@
 
   const toggleEl = document.getElementById('toggle-switch') as HTMLInputElement | null;
   const domainEl = document.getElementById('domain-select') as HTMLSelectElement | null;
+  const gifSafeEl = document.getElementById('gif-safe-toggle') as HTMLInputElement | null;
 
-  if (!toggleEl || !domainEl) {
+  if (!toggleEl || !domainEl || !gifSafeEl) {
     console.error(`${ERR_PFX} E100: required DOM elements not found`);
     return;
   }
@@ -17,7 +18,7 @@
     });
   }
 
-  chrome.storage.local.get(['enabled', 'domain'], (result: { [key: string]: unknown }) => {
+  chrome.storage.local.get(['enabled', 'domain', 'gifSafe'], (result: { [key: string]: unknown }) => {
     if (chrome.runtime.lastError) {
       console.error(`${ERR_PFX} E110: storage.get failed`, chrome.runtime.lastError.message);
       return;
@@ -27,6 +28,9 @@
     }
     if (typeof result.domain === 'string') {
       domainEl.value = result.domain;
+    }
+    if (typeof result.gifSafe === 'boolean') {
+      gifSafeEl.checked = result.gifSafe;
     }
   });
 
@@ -54,5 +58,18 @@
       }
     });
     syncToContentScript({ type: 'UPDATE_DOMAIN', domain: newDomain });
+  });
+
+  gifSafeEl.addEventListener('change', () => {
+    const isGifSafe = gifSafeEl.checked;
+    chrome.storage.local.set({ gifSafe: isGifSafe }, () => {
+      if (chrome.runtime.lastError) {
+        console.error(
+          `${ERR_PFX} E140: storage.set('gifSafe') failed`,
+          chrome.runtime.lastError.message,
+        );
+      }
+    });
+    syncToContentScript({ type: 'UPDATE_GIF_SAFE', gifSafe: isGifSafe });
   });
 })();

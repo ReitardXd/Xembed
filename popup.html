@@ -18,13 +18,24 @@
     </label>
   </div>
   <div>
-    <label for="domain-select">Embed Type:</label>
-    <select id="domain-select">
+ <label for="domain-select">Embed Type:</label>
+<!-- Add your discord embed fixes here if you have any extra for example hitlerx works aswell but i havent added it as an option --> 
+      <select id="domain-select">
       <option value="vxtwitter.com">vxtwitter</option>
-      <option value="fixupx.com">fixupx</option>
+      <option value="fixupx.com">fixupx (GIF-capable)</option>
       <option value="girlcockx.com">girlcockx</option>
-      <option value="fxtwitter.com">fxtwitter</option>
+      <option value="fxtwitter.com">fxtwitter (GIF-capable)</option>
+      <option value="hitlerx.com">hitlerx</option>
     </select>
+  </div>
+  <div>
+    <label>
+      <input type="checkbox" id="gif-safe-toggle" />
+      Force GIF-capable embed
+    </label>
+    <div style="font-size: 11px; color: #999; margin-top: 4px;">
+      Checks each pasted link individually — only animated GIF tweets get routed through fxtwitter/fixupx for autoplay. Everything else still uses your Embed Type above.
+    </div>
   </div>
   <script src="dist/popup.js"></script>
 </body>
