@@ -1,3 +1,8 @@
+// Xembed - Discord Twitter/X embed fixer
+// Copyright (C) 2026 Pranav
+// Licensed under the GNU General Public License v3.0
+// See LICENSE file for details
+
 (function (): void {
   const ERR_PFX = '[Xembed:popup]';
 
